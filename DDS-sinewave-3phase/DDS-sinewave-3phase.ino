@@ -21,15 +21,11 @@ PROGMEM const unsigned char sine256[] =
 #define PWM_OUT_1 11 // PWM output on pin 11
 #define PWM_OUT_2 10 // PWM output on pin 10
 #define PWM_OUT_3 9 // PWM output on pin 9
-#define LED_PIN 13 // LED status on pin 13
+//#define LED_PIN 13 // LED status on pin 13
 #define TEST_PIN 7 // Scope trigger on pin 7
 #define POTEN_IN 0 // Potentiometer on pin 0
 #define OFFSET_1 85 // Offset for second-phase
 #define OFFSET_2 170 // Offset for third-phase
-
-// output frequency
-#define FREQ_MIN 0   // default: 0
-#define FREQ_MAX 60 // default: 100
 
 double dfreq;
 const double refclk = 31376.6; // measured
@@ -43,7 +39,7 @@ volatile uint32_t tword_m; // dds tuning word m
 //******************************************************************
 void setup()
 {
-pinMode(LED_PIN, OUTPUT); // sets the digital pin as output
+//pinMode(LED_PIN, OUTPUT); // sets the digital pin as output
 Serial.begin(115200); // connect to the serial port
 Serial.println("DDS Test");
 pinMode(TEST_PIN, OUTPUT); // sets the digital pin as output
@@ -65,7 +61,8 @@ void loop()
 if (c4ms > 250) // timer / wait for a full second
 {
 c4ms = 0;
-dfreq = map(analogRead(POTEN_IN), 0, 1023, FREQ_MIN, FREQ_MAX);; // read Poti on analog pin 0 to adjust output frequency from 0..1023 Hz
+//dfreq = map(analogRead(POTEN_IN), 0, 1023, FREQ_MIN, FREQ_MAX);
+dfreq = analogRead(POTEN_IN); // read Poti on analog pin 0 to adjust output frequency from 0..1023 Hz
 cbi (TIMSK2, TOIE2); // disble Timer2 Interrupt
 tword_m = twoTo32 * dfreq / refclk; // calulate DDS new tuning word
 sbi (TIMSK2, TOIE2); // enable Timer2 Interrupt
